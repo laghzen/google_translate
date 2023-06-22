@@ -1,0 +1,18 @@
+from time import sleep
+from deep_translator import GoogleTranslator
+
+# Use any translator you like, in this example GoogleTranslator
+translator = GoogleTranslator(api_key='AIzaSyCpWj59y_uR-x4Su5BQNMyZDNl2tx2YCRw', source='en', target='ru')
+
+
+for name in ['test', 'valid']:
+    with open(f'{name}_.tsv', 'w', encoding="utf-8") as train_file_w:
+        with open(f'{name}.tsv', 'r', encoding="utf-8") as train_file:
+            for d, line in enumerate(train_file.readlines()):
+
+                base = translator.translate(line.split('|||')[0].split('\t')[-1])
+                rez = '|||'.join([translator.translate(line.split('|||')[i].split('\t')[0]) for i in range(1, len(line.split('|||')))])
+
+                train_file_w.write(base + '|||' + rez + '\n')
+
+                print(d, d/7)
